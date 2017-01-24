@@ -12054,7 +12054,7 @@ Standard deviation of prices: $165,171.13
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer:</strong> 0.923. Looks like the model has a good fit. But more information is needed (like residual) to determine if the model had success.</p>
+<p><strong>Answer:</strong> 0.923. Looks like the model can represent the data well, once the Rˆ2 was close to 1 (100%). But not necessarily a high Rˆ2 means the model has a good fit. Checking the residual plots could help to determine if this is a good model.</p>
 
 </div>
 </div>
@@ -13830,7 +13830,7 @@ kiSpb+yckiRJkiRJUt/8H8vrzbOeleO2AAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer: </strong> max_depth = 3. If the training set has small number of points, the the training curve will be close to 1, because the overfitting. As training set increase, the training curve score decreases and converge to something like 0.8. The testing curve starts with 0 because model will predict a small number of points and can not generalize. With bigger training set, the test curve start to increase and go to something like 0.8 too. Apparently the model has a good generalization.</p>
+<p><strong>Answer: </strong> max_depth = 3. If the training set has small number of points, the the training curve will be close to 1, because the overfitting. As training set increase, the training curve score decreases and converge to something like 0.8. The testing curve starts with 0 because model will predict a small number of points and can not generalize. With bigger training set, the test curve start to increase and go to something like 0.8 too. About having more training is benefit to the model isn't true, because with 50 or more training point the testing curve score don't change much. Apparently the model has a good generalization.</p>
 
 </div>
 </div>
