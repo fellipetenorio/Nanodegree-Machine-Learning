@@ -60,11 +60,9 @@ class LearningAgent(Agent):
         # Because the aim of this project is to teach Reinforcement Learning, we have placed 
         # constraints in order for you to learn how to adjust epsilon and alpha, and thus learn about the balance between exploration and exploitation.
         # With the hand-engineered features, this learning process gets entirely negated.
-        light = inputs['light']
-        on_comming_from_left = inputs['oncoming']
-        on_comming_from_right = False
-        # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, light, on_comming_from_left, on_comming_from_right)
+
+        # Set 'state' as a tuple of relevant data for the agent
+        state = (waypoint, inputs)
 
         return state
 
