@@ -3,7 +3,6 @@ import math
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
-import operator
 
 class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
@@ -82,13 +81,13 @@ class LearningAgent(Agent):
             maximum Q-value of all actions based on the 'state' the smartcab is in. """
 
         ########### 
-        ## TO DO ##
+        ## TO DO ## - OK Rev1.0
         ###########
         # Calculate the maximum Q-value of all actions for a given state
         if state not in self.Q.keys():
             maxQ = None
         else:
-            maxQ = max(self.Q[state], key=operator.itemgetter(1))[0]
+            maxQ = max(self.Q[state], key=self.Q[state].get)
 
         return maxQ 
 
@@ -120,7 +119,7 @@ class LearningAgent(Agent):
         # action = None
 
         ########### 
-        ## TO DO ##
+        ## TO DO ## - OK Rev1.0
         ###########
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
@@ -128,7 +127,9 @@ class LearningAgent(Agent):
         # Be sure that when choosing an action with highest Q-value that you randomly select between actions that "tie".
         # Testing to follow the waypoint always needed
         if self.learning:
-            action = self.get_maxQ(state)
+            if self.next_waypoint in self.valid_actions:
+                action = self.next_waypoint
+            #action = self.get_maxQ(state)
         else:
             #action = self.next_waypoint if self.next_waypoint in self.valid_actions else random.choice(self.valid_actions)
             action = random.choice(self.valid_actions)
@@ -147,6 +148,7 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
+        self.Q[state][action] += self.alpha*reward
 
         return
 
@@ -210,7 +212,7 @@ def run():
     if default_params:
         sim = Simulator(env, log_metrics=True)
     else:
-        sim = Simulator(env, log_metrics=True, update_delay=0.1, display=True)
+        sim = Simulator(env, log_metrics=True, update_delay=0.01, display=False)
     
     ##############
     # Run the simulator
