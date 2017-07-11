@@ -3,6 +3,7 @@ import math
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
+import operator
 
 class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
@@ -87,7 +88,7 @@ class LearningAgent(Agent):
         if state not in self.Q.keys():
             maxQ = None
         else:
-            maxQ = max(self.Q[state], key=self.Q[state].get)
+            maxQ = max(self.Q[state].iteritems(), key=operator.itemgetter(1))[1]
 
         return maxQ 
 
@@ -101,10 +102,10 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
-        if state not in self.Q.keys():
-            self.Q[state] = {}
-            for i in self.valid_actions:
-                self.Q[state][i] = 0.0
+        if self.learning and state not in self.Q.keys():
+            self.Q[state] = {None:0.0, 'forward':0.0, 'left':0.0, 'right':0.0}
+            # for i in self.valid_actions:
+            #     self.Q[state][i] = 0.0
 
         return
 
@@ -126,14 +127,18 @@ class LearningAgent(Agent):
         # Otherwise, choose an action with the highest Q-value for the current state
         # Be sure that when choosing an action with highest Q-value that you randomly select between actions that "tie".
         # Testing to follow the waypoint always needed
-        if self.learning:
-            if self.next_waypoint in self.valid_actions:
-                action = self.next_waypoint
-            #action = self.get_maxQ(state)
-        else:
-            #action = self.next_waypoint if self.next_waypoint in self.valid_actions else random.choice(self.valid_actions)
+        if not self.learning:
             action = random.choice(self.valid_actions)
-
+            #action = self.next_waypoint if self.next_waypoint in self.valid_actions else random.choice(self.valid_actions)
+        else:
+            actions = []
+            mQ = self.get_maxQ(state)
+            for a in self.Q[state]:
+                if mQ == self.Q[state][a]:
+                    actions.append(a)
+            # if self.next_waypoint in self.valid_actions:
+            #     action = self.next_waypoint
+            action = random.choice(actions)
 
         return action
 
@@ -144,11 +149,11 @@ class LearningAgent(Agent):
             when conducting learning. """
 
         ########### 
-        ## TO DO ##
+        ## TO DO ## - OK Rev1.0
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        self.Q[state][action] += self.alpha*reward
+        self.Q[state][action] += self.alpha*(reward-self.Q[state][action])
 
         return
 
@@ -210,7 +215,7 @@ def run():
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
     if default_params:
-        sim = Simulator(env, log_metrics=True)
+        sim = Simulator(env)
     else:
         sim = Simulator(env, log_metrics=True, update_delay=0.01, display=False)
     
