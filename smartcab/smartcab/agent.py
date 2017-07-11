@@ -131,14 +131,15 @@ class LearningAgent(Agent):
             action = random.choice(self.valid_actions)
             #action = self.next_waypoint if self.next_waypoint in self.valid_actions else random.choice(self.valid_actions)
         else:
-            actions = []
-            mQ = self.get_maxQ(state)
-            for a in self.Q[state]:
-                if mQ == self.Q[state][a]:
-                    actions.append(a)
-            # if self.next_waypoint in self.valid_actions:
-            #     action = self.next_waypoint
-            action = random.choice(actions)
+            if self.epsilon > random.random():
+                action = random.choice(self.valid_actions)
+            else:
+                actions = []
+                mQ = self.get_maxQ(state)
+                for a in self.Q[state]:
+                    if mQ == self.Q[state][a]:
+                        actions.append(a)
+                action = random.choice(actions)
 
         return action
 
