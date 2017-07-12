@@ -24,7 +24,7 @@ class LearningAgent(Agent):
         ## TO DO ## - OK Rev1.0 (did nothing)
         ###########
         # Set any additional class parameters as needed
-
+        self.trials = 0.0
 
     def reset(self, destination=None, testing=False):
         """ The reset function is called at the beginning of each trial.
@@ -40,12 +40,16 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
+        # Increment the trial number
         if testing:
-            self.epsilon = 0
-            self.alpha = 0
+            self.epsilon = 0.0
+            self.alpha = 0.0
         else:
-            self.epsilon -= 0.05
-
+            self.trials += 1.0
+            self.epsilon = math.e**(-1.0*self.alpha*self.trials) #A+, A
+            #self.epsilon = self.alpha**self.trials #F,D
+            #self.epsilon = math.fabs(math.cos(self.trials * self.alpha))
+            #self.epsilon = 1.0/(self.trials**2.0) #F,D
         return None
 
     def build_state(self):
@@ -154,7 +158,8 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        self.Q[state][action] += self.alpha*(reward-self.Q[state][action])
+        if self.learning:
+            self.Q[state][action] += self.alpha*(reward-self.Q[state][action])
 
         return
 
@@ -195,7 +200,7 @@ def run():
     if default_params:
         agent = env.create_agent(LearningAgent)
     else:
-        agent = env.create_agent(LearningAgent, learning = True)
+        agent = env.create_agent(LearningAgent, learning = True, alpha = 0.01, epsilon = 1.0)
 
 
 
@@ -218,8 +223,9 @@ def run():
     if default_params:
         sim = Simulator(env)
     else:
-        sim = Simulator(env, log_metrics=True, update_delay=0.01, display=False)
-    
+        sim = Simulator(env, log_metrics=True, update_delay=0.01, display=False, optimized=True)
+
+
     ##############
     # Run the simulator
     # Flags:
@@ -228,7 +234,7 @@ def run():
     if default_params:
         sim.run()
     else:
-        sim.run(n_test=10)
+        sim.run(n_test=40, tolerance=0.001)
 
 
 if __name__ == '__main__':
