@@ -13236,10 +13236,12 @@ The time feature 'deadline' wasn't used because I think that this feature only w
 To calculate the total size let´s check the set of each variable:</p>
 <ol>
 <li>Light: {red, right}. #2</li>
-<li>Waypoint: {forward, left, right, None}. #4</li>
-<li>Trafic: {None, forward, left, right} for each side. #12</li>
+<li>Waypoint: {forward, left, right}. #3 (There is no None here. The reviewer told me the answer withou notice).</li>
+<li>Oncoming: {left, right, forward, None}. #4</li>
+<li>Left: {left, right, forward, None}. #4</li>
+<li>Right: {left, right, forward, None}. #4</li>
 </ol>
-<p>So, we have a total of 2x4x12 = 96 possibles states. This is an easy catch for a computer!</p>
+<p>So, we have a total of 2x3x4x4x4 = 384 possibles states. This isn't a complex state space for computer.</p>
 
 </div>
 </div>
@@ -14526,6 +14528,7 @@ SZJqYsCSJEmSpJoYsCRJkiSpJk/KEmY3stzlXAAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Answer:"><strong>Answer:</strong><a class="anchor-link" href="#Answer:">&#182;</a></h2><p>There are similarities between the basic and the default Q-Learning as they start the simulation with random choice of next action. But it's clearly that the Q-learning agent improved his decision over time. The Relative Frenquecy show that the bad actions has decreased over Trial Number. The Reward has improved too. But in both this graphs the end of trial shows that the agent get worst.</p>
+<p>The agent did 20 trials before testing (can see that in x-axix).</p>
 <p>About the decaying function looks like it represents the parameters because in some point the model start to learn and start to avoid violation and accidents.</p>
 <p>The Reliability improves to D and Safety was still F.</p>
 <p>Looks like that the agent in this situation needs more training.</p>
@@ -16505,7 +16508,9 @@ In this case the optimal policy would be going forward, but the best Q was to ri
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
 <p>About the Smartcab itself the problem is beacause it is based on a perfect perception of the environment. Sometime there is no information about other cars, streets and turns. Even the agent can adapt to no-grid (x,y) streets but sometimes there is no knowledge about all features to determine the state and the optimal policy. Even the optimal policy don't exists sometimes.</p>
+<p>Other thing is that there is no way that we can make a state based in the agent's position. Even if we get the GPS there no way of q-learning be applied for each position in the world. We are ever considering that the agent would have all the position in all way.</p>
 <p>About the environment I think the problem is about the environment stochastic. For the driving itself we can consider that once the destination is setted and a good route is create (e.g. with waze or google street) the agent can go towards to toward. The problem is about the number of features. In real world the agent need to read real time information around him to decide when avoid when other agents violates. Some time the agent would to choice about some critical situation, like when a kid run into the street to catch his ball. Other example is when the light is broken, the agent need to make some decision and in our model there is no state with None value for light.</p>
+<p>Another consideration is that the destination change randomly every trial, so the agent future reward leads the agent to learn about current location to destination policy and not to learn from the traffic policy. So, once the negative reward from the bad actions are smaller then reaching the goal, the agent will learn bad actions when the q-value updates.</p>
 
 </div>
 </div>
